@@ -2,7 +2,7 @@
 import Box from "@mui/material/Box";
 
 //component
-import ModeSelect from "../../components/ModeSelect";
+import ModeSelect from "~/components/ModeSelect";
 
 function AppBar() {
   return (
