@@ -24,7 +24,7 @@ import DragHandleIcon from "@mui/icons-material/DragHandle";
 //component
 import ListCard from "./ListCards/ListCard";
 
-function Column() {
+function Column({ column }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -62,7 +62,7 @@ function Column() {
           variant="h6"
           sx={{ fontSize: "1rem", fontWeight: "bold", cursor: "pointer" }}
         >
-          Column Title
+          {column?.title}
         </Typography>
         <Box>
           <Tooltip title="More option">
@@ -127,7 +127,7 @@ function Column() {
         </Box>
       </Box>
 
-      <ListCard />
+      <ListCard cards={column?.cards} />
 
       <Box
         sx={{
