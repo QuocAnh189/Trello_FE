@@ -28,15 +28,13 @@ function Template() {
   return (
     <Box>
       <Button
+        sx={{ color: "white", fontWeight: "bold" }}
         id="basic-button-template"
         aria-controls={open ? "basic-menu-template" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         endIcon={open ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-        sx={{
-          fontWeight: "bold",
-        }}
       >
         Template
       </Button>
