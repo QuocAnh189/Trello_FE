@@ -7,7 +7,7 @@ import CardItem from "./Card/Card";
 const COLUMN_HEADER_HEIGHT = "50px";
 const COLUMN_FOOTER_HEIGHT = "56px";
 
-function ListCard() {
+function ListCard({ cards }) {
   return (
     <Box
       sx={{
@@ -30,8 +30,9 @@ function ListCard() {
         },
       }}
     >
-      <CardItem />
-      <CardItem temporaryHideMedia />
+      {cards.map((card) => (
+        <CardItem key={card._id} card={card} />
+      ))}
     </Box>
   );
 }
