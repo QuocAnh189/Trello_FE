@@ -12,9 +12,9 @@
  */
 
 export const mapOrder = (originalArray, orderArray, key) => {
-  if (!originalArray || !orderArray || !key) return [];
+  if (!originalArray || !orderArray || !key) return []
 
   return [...originalArray].sort((a, b) => {
-    return orderArray.indexOf(a[key]) - orderArray.indexOf(b[key]);
-  });
-};
+    return orderArray.indexOf(a[key]) - orderArray.indexOf(b[key])
+  })
+}

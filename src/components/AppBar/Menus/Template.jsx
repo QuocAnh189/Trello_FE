@@ -1,38 +1,38 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 //mui
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Check from "@mui/icons-material/Check";
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Divider from '@mui/material/Divider'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Check from '@mui/icons-material/Check'
 
 //icon
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 
 function Template() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
   return (
     <Box>
       <Button
-        sx={{ color: "white", fontWeight: "bold" }}
+        sx={{ color: 'white', fontWeight: 'bold' }}
         id="basic-button-template"
-        aria-controls={open ? "basic-menu-template" : undefined}
+        aria-controls={open ? 'basic-menu-template' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         endIcon={open ? <ExpandMoreIcon /> : <ExpandLessIcon />}
       >
@@ -44,7 +44,7 @@ function Template() {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button-template",
+          'aria-labelledby': 'basic-button-template',
         }}
       >
         <MenuItem>
@@ -75,7 +75,7 @@ function Template() {
         </MenuItem>
       </Menu>
     </Box>
-  );
+  )
 }
 
-export default Template;
+export default Template

@@ -1,53 +1,55 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 //mui
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Typography from "@mui/material/Typography";
-import ContentCut from "@mui/icons-material/ContentCut";
-import ContentCopy from "@mui/icons-material/ContentCopy";
-import ContentPaste from "@mui/icons-material/ContentPaste";
-import Tooltip from "@mui/material/Tooltip";
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Divider from '@mui/material/Divider'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Typography from '@mui/material/Typography'
+import ContentCut from '@mui/icons-material/ContentCut'
+import ContentCopy from '@mui/icons-material/ContentCopy'
+import ContentPaste from '@mui/icons-material/ContentPaste'
+import Tooltip from '@mui/material/Tooltip'
 
 //icon
-import Cloud from "@mui/icons-material/Cloud";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddCardIcon from "@mui/icons-material/AddCard";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
+import Cloud from '@mui/icons-material/Cloud'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import DeleteIcon from '@mui/icons-material/Delete'
+import AddCardIcon from '@mui/icons-material/AddCard'
+import DragHandleIcon from '@mui/icons-material/DragHandle'
 
 //component
-import ListCard from "./ListCards/ListCard";
+import ListCard from './ListCards/ListCard'
 
 //dnd-kit
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function Column({ column }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: column._id, data: { ...column } });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: column._id,
+    data: { ...column },
+  })
 
   const dndKitColumnStyles = {
-    touchAction: "none",
+    touchAction: 'none',
     transform: CSS.Translate.toString(transform),
     transition,
-  };
+  }
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <Box
@@ -56,39 +58,34 @@ function Column({ column }) {
       {...attributes}
       {...listeners}
       sx={{
-        minWidth: "300px",
-        maxWidth: "300px",
-        backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#333643" : "#ebecf0",
+        minWidth: '300px',
+        maxWidth: '300px',
+        backgroundColor: theme => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
         ml: 2,
-        borderRadius: "6px",
-        height: "fit-content",
-        maxHeight: (theme) =>
-          `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
+        borderRadius: '6px',
+        height: 'fit-content',
+        maxHeight: theme => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
       }}
     >
       <Box
         sx={{
-          height: (theme) => theme.trello.columnHeaderHeight,
+          height: theme => theme.trello.columnHeaderHeight,
           p: 2,
-          display: "flex",
-          justifyContent: "space-between",
+          display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontSize: "1rem", fontWeight: "bold", cursor: "pointer" }}
-        >
+        <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer' }}>
           {column?.title}
         </Typography>
         <Box>
           <Tooltip title="More option">
             <ExpandMoreIcon
-              sx={{ color: "text.primary", cursor: "pointer" }}
+              sx={{ color: 'text.primary', cursor: 'pointer' }}
               id="basic-column-dropdown"
-              aria-controls={open ? "basic-menu-workspaces" : undefined}
+              aria-controls={open ? 'basic-menu-workspaces' : undefined}
               aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+              aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
             />
           </Tooltip>
@@ -99,7 +96,7 @@ function Column({ column }) {
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              "aria-labelledby": "basic-column-dropdown",
+              'aria-labelledby': 'basic-column-dropdown',
             }}
           >
             <MenuItem>
@@ -148,20 +145,20 @@ function Column({ column }) {
 
       <Box
         sx={{
-          height: (theme) => theme.trello.columnFooterHeight,
+          height: theme => theme.trello.columnFooterHeight,
           p: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Button startIcon={<AddCardIcon />}>Add new card</Button>
         <Tooltip title="Drag to move">
-          <DragHandleIcon sx={{ cursor: "pointer" }} />
+          <DragHandleIcon sx={{ cursor: 'pointer' }} />
         </Tooltip>
       </Box>
     </Box>
-  );
+  )
 }
 
-export default Column;
+export default Column
