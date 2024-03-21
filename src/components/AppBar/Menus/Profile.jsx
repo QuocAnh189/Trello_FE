@@ -37,7 +37,7 @@ function Profile() {
         onClick={handleClick}
         sx={{ padding: 0 }}
       >
-        <Tooltip title="Account settings">
+        <Tooltip title="Profile">
           <IconButton
             onClick={handleClick}
             size="small"

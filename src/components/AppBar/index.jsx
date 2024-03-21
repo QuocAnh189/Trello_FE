@@ -19,13 +19,12 @@ import Profile from './Menus/Profile'
 //icon
 import SvgIcon from '@mui/material/SvgIcon'
 import AppsIcon from '@mui/icons-material/Apps'
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import CloseIcon from '@mui/icons-material/Close'
-
 import SearchIcon from '@mui/icons-material/Search'
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState()
@@ -40,9 +39,7 @@ function AppBar() {
         gap: 2,
         px: 2,
         overflowX: 'auto',
-        backgroundColor: theme => {
-          return theme.palette.mode === 'dark' ? '#2c3e50' : '#1560c0'
-        },
+        backgroundColor: theme => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1560c0'),
         '&::-webkit-scroll-track': { m: 2 },
       }}
     >
