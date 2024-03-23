@@ -14,18 +14,3 @@ export const generatePlaceholderCard = column => {
     FE_PlaceholderCard: true,
   }
 }
-
-/**
- * Example:
- */
-const stringTest = 'anhquoc'
-const capString = capitalizeFirstLetter(stringTest)
-
-console.log('stringTest:', stringTest)
-console.log('capString:', capString)
-/**
- * Results:
- *
- * stringTest: Of course, nothing changes =))
- * capString: Trungquandev
- */

@@ -60,9 +60,6 @@ function Profile() {
         }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
           <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> My account
         </MenuItem>
         <Divider />

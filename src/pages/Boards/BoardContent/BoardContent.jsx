@@ -30,12 +30,16 @@ import CardItem from './ListColumns/Column/ListCards/Card/Card'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
 
+//redux
+import { useGetColumnsByBoardIdQuery } from '~/redux/services/columnApi'
+
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD',
 }
 
 function BoardContent({ board }) {
+  const { data: columns, isLoading: loadingColumns } = useGetColumnsByBoardIdQuery(board._id)
   // const pointerSensor = useSensor(PointerSensor, {
   //   activationConstraint: { distance: 10 },
   // });
@@ -53,14 +57,16 @@ function BoardContent({ board }) {
   const sensors = useSensors(mouseSensor, touchSensor)
 
   const [orderedColumns, setOrderedColumns] = useState([])
+  const [orderColumnIds, setOrderColumnIds] = useState(board?.columnOrderIds)
   const [activeDragItemId, setActiveDragItemId] = useState(null)
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnDraggingCard] = useState(null)
 
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
-  }, [board])
+    console.log(orderColumnIds)
+    setOrderedColumns(mapOrder(columns, orderColumnIds, '_id'))
+  }, [columns])
 
   //Tim column theo cardId
   const findColumnByCardId = cardId => {
@@ -255,7 +261,15 @@ function BoardContent({ board }) {
           overFlowY: 'hidden',
         }}
       >
-        <ListColumns columns={orderedColumns} />
+        <ListColumns
+          columns={orderedColumns}
+          addColumnOrderIds={columnId => {
+            setOrderColumnIds(prev => {
+              const orderColumnIds = [...prev, columnId]
+              return orderColumnIds
+            })
+          }}
+        />
         <DragOverlay dropAnimation={dropAnimation}>
           {!activeDragItemType && null}
           {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && <Column column={activeDragItemData} />}

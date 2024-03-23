@@ -47,9 +47,11 @@ function BoardBar({ board }) {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label={board?.title} clickable />
+        <Tooltip title={board?.description}>
+          <Chip sx={MENU_STYLE} icon={<DashboardIcon />} label={board?.title} clickable />
+        </Tooltip>
 
-        {board.type && (
+        {board?.type && (
           <Chip sx={MENU_STYLE} icon={<VpnLockIcon />} label={capitalizeFirstLetter(board?.type)} clickable />
         )}
 

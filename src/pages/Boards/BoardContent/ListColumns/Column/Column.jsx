@@ -13,6 +13,7 @@ import ContentCut from '@mui/icons-material/ContentCut'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
 
 //icon
 import Cloud from '@mui/icons-material/Cloud'
@@ -20,15 +21,26 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
+import CloseIcon from '@mui/icons-material/Close'
 
 //component
 import ListCard from './ListCards/ListCard'
+import { toast } from 'react-toastify'
 
 //dnd-kit
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
+//redux
+import { useCreateCardMutation, useGetCardSByColumnIdQuery } from '~/redux/services/cardApi'
+import { useDeleteColumnMutation } from '~/redux/services/columnApi'
+
+//dialog
+import { useConfirm } from 'material-ui-confirm'
+
 function Column({ column }) {
+  const confirmDeleteColumn = useConfirm()
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column },
@@ -45,12 +57,58 @@ function Column({ column }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
+  const { data: cards, isLoading } = useGetCardSByColumnIdQuery(column?._id)
+  const [createCard, { isLoading: isLoadingCreate }] = useCreateCardMutation()
+  const [deleteColumn, { isLoading: isLoadingDelete }] = useDeleteColumnMutation()
+
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const [openNewCardForm, setOpenNewCardForm] = useState()
+  const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
+
+  const [newCardTitle, setNewCardTitle] = useState()
+  const handleAddNewCard = async () => {
+    try {
+      if (!newCardTitle) {
+        toast.error('Please enter card title')
+        return
+      }
+      const data = { title: newCardTitle, boardId: '65fc818c10af1b8be586063c', columnId: column._id }
+      const card = await createCard(data).unwrap()
+      if (card) {
+        toggleOpenNewCardForm()
+        setNewCardTitle('')
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleDeleteColumn = async () => {
+    confirmDeleteColumn({
+      title: 'Delete Column?',
+      description: 'This action is permanent delete your Column and its Card! Are you sure',
+      confirmationText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      // confirmationKeyword: 'ANHQUOC',
+    })
+      .then(() => {
+        handleDeleteColumnDetail()
+      })
+      .catch(() => {})
+  }
+
+  const handleDeleteColumnDetail = async () => {
+    const deleteResult = await deleteColumn(column._id).unwrap()
+    if (deleteResult) {
+      toast.success('Delete column successffuly')
+    }
   }
 
   return (
@@ -95,13 +153,17 @@ function Column({ column }) {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              onClick={handleClose}
               MenuListProps={{
                 'aria-labelledby': 'basic-column-dropdown',
               }}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={toggleOpenNewCardForm}
+                sx={{ '&:hover': { color: 'warning.dark', '& .delete-card-icon': { color: 'warning.dark' } } }}
+              >
                 <ListItemIcon>
-                  <AddCardIcon fontSize="small" />
+                  <AddCardIcon className="delete-card-icon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
@@ -125,11 +187,15 @@ function Column({ column }) {
               </MenuItem>
 
               <Divider />
-              <MenuItem>
+              <MenuItem
+                onClick={handleDeleteColumn}
+                disabled={isLoadingDelete}
+                sx={{ '&:hover': { color: 'warning.dark', '& .delete-forerver-icon': { color: 'warning.dark' } } }}
+              >
                 <ListItemIcon>
-                  <DeleteIcon fontSize="small" />
+                  <DeleteIcon className="delete-forerver-icon" fontSize="small" />
                 </ListItemIcon>
-                <ListItemText>Remove this column</ListItemText>
+                <ListItemText>Delete this column</ListItemText>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon>
@@ -141,7 +207,7 @@ function Column({ column }) {
           </Box>
         </Box>
 
-        <ListCard cards={column?.cards} />
+        <ListCard cards={cards} />
 
         <Box
           sx={{
@@ -152,10 +218,78 @@ function Column({ column }) {
             justifyContent: 'space-between',
           }}
         >
-          <Button startIcon={<AddCardIcon />}>Add new card</Button>
-          <Tooltip title="Drag to move">
-            <DragHandleIcon sx={{ cursor: 'pointer' }} />
-          </Tooltip>
+          {!openNewCardForm ? (
+            <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Button onClick={toggleOpenNewCardForm} startIcon={<AddCardIcon />}>
+                Add new card
+              </Button>
+              <Tooltip title="Drag to move">
+                <DragHandleIcon sx={{ cursor: 'pointer' }} />
+              </Tooltip>
+            </Box>
+          ) : (
+            <Box sx={{ height: '100%', display: 'flex', alignItems: 'center ', gap: 1 }}>
+              <TextField
+                label="Enter card title..."
+                type="text"
+                size="small"
+                variant="outlined"
+                backgroundColor="white"
+                autoFocus
+                value={newCardTitle}
+                onChange={e => {
+                  setNewCardTitle(e.target.value)
+                }}
+                sx={{
+                  '& label': { color: 'text.primary' },
+                  '& input': {
+                    color: theme => theme.palette.primary.main,
+                    backgroundColor: theme => (theme.palette.mode === 'dark' ? '#333643' : 'white'),
+                  },
+                  '& label.Mui-focused': { color: theme => theme.palette.primary.main },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: theme => theme.palette.primary.main,
+                    },
+                    '&:hover fieldset': {
+                      borderColor: theme => theme.palette.primary.main,
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: theme => theme.palette.primary.main,
+                    },
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    borderRadius: 1,
+                  },
+                }}
+              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Button
+                  disabled={isLoadingCreate}
+                  onClick={handleAddNewCard}
+                  variant="contained"
+                  color="success"
+                  size="small"
+                  sx={{
+                    boxShadow: 'none',
+                    border: '0.5px solid',
+                    borderColor: theme => theme.palette.success.main,
+                    '&:hover': { backgroundColor: theme => theme.palette.success.main },
+                  }}
+                >
+                  Add
+                </Button>
+                <CloseIcon
+                  fontSize="small"
+                  sx={{
+                    cursor: 'pointer',
+                    color: theme => theme.palette.warning.light,
+                  }}
+                  onClick={toggleOpenNewCardForm}
+                />
+              </Box>
+            </Box>
+          )}
         </Box>
       </Box>
     </div>
